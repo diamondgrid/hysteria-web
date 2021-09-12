@@ -1,0 +1,5 @@
+# These are all stuff the user should install themselves.
+/materialize
+
+# This is for debugging and testing purposes. You don't need it.
+jquery.js

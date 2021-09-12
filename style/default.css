@@ -1,0 +1,57 @@
+@import url('../materialize/css/materialize.min.css');
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+@import url('../fontawesome/css/brands.min.css');
+
+body {
+    padding: 0;
+    margin: 0;
+    font-family: 'Helvetica', 'Arial', sans-serif;
+    background-color: #1a237e;
+    color: white;
+}
+
+div.main {
+    padding: 10px;
+}
+
+.dropdown-content a:hover {
+    background-color: #3949ab !important;
+}
+
+.select-dropdown {
+    color: white;
+}
+
+.materialize-textarea {
+    color: white !important;
+}
+
+#editorContextMenu {
+    position: fixed;
+    z-index: 10000;
+    width: 150px;
+    background-color: #212121;
+    border-radius: 5px;
+    display: none;
+}
+
+#editorContextMenu.visible {
+    display: block;
+}
+
+#editorContextMenu .contextItem {
+    padding: 8px 10px;
+    font-size: 15px;
+    color: #eee;
+    cursor: pointer;
+    border-radius: inherit;
+}
+
+#editorContextMenu .contextItem:hover {
+    background-color: #424242;
+}
+
+.big-text {
+    font-size: 32px !important;
+    padding: 10px !important;
+}

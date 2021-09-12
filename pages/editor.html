@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Hysteria Online - Editor</title>
+        <link rel="stylesheet" href="../style/default.css"/>
+        <script src="../js/jquery.js"></script>
+        <script src="../materialize/js/materialize.min.js"></script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                var exportButton = document.querySelectorAll('#exportButton');
+                M.FloatingActionButton.init(exportButton, {
+                    toolbarEnabled: true
+                });
+
+                var addNewDropdownTrigger = document.querySelectorAll('#addNewDropdownTrigger');
+                M.Dropdown.init(addNewDropdownTrigger, {
+                    constrainWidth: false
+                });
+                M.Tooltip.init(addNewDropdownTrigger);
+
+                M.AutoInit();
+            });
+        </script>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <meta name="description" content="Hysteria - Write lyrics for the modern age."/>
+        <meta charset="utf8"/>
+    </head>
+    <body>
+        <nav>
+            <div class="nav-wrapper blue darken-4">
+                <a href="../index.html" class="brand-logo">&ensp;Hysteria</a>
+                <ul id="nav-mobile" class="right hide-on-med-and-down">
+                    <li><a href="#" class="tooltipped" data-position="bottom" data-tooltip="Coming Soon!">Download</a></li>
+                    <li><a href="./editor.html">Editor</a></li>
+                    <li><a href="./about.html">About</a></li>
+                </ul>
+            </div>
+        </nav>
+        <main class="indigo darken-4">
+            <div class="fixed-action-btn no-autoinit toolbar" id="exportButton">
+                <a href="#" class="btn-floating btn-large indigo tooltipped" data-position="top" data-tooltip="Export Lyrics">
+                    <i class="large material-icons">file_upload</i>
+                </a>
+                <ul>
+                    <li><a class="btn-floating tooltipped" onclick="exportToGenius();" data-position="top" data-tooltip="Export to Genius format...">GENIUS</a></li>
+                    <li><a class="btn-floating tooltipped" onclick="exportToMusixmatch();" data-position="top" data-tooltip="Export to Musixmatch format...">MUSIXMATCH</a></li>
+                    <li><a class="btn-floating tooltipped" onclick="exportToJSON();" data-position="top" data-tooltip="Export to JSON format...">JSON</a></li>
+                    <li><a class="btn-floating tooltipped" data-position="top" data-tooltip="Cancel"><i class="material-icons">close</i></a></li>
+                </ul>
+            </div>
+            <div class="main container">
+                <h1><div class="input-field">
+                    <input type="text" id="songTitle" class="white-text big-text" value="Song Title Here"/>
+                    <label for="songTitle">Song Title</label>
+                </div></h1>
+                <div class="row">
+                    <div class="col s12" id="editorContent">
+                        <div id="editorContextMenu">
+                            <div class="contextItem"><a class="modal-trigger" href="#rhymingModal">Find rhymes...</a></div>
+                        </div>
+                        <div class="card indigo darken-3 lyric-card" id="card1">
+                            <div class="card-content white-text">
+                                <span class="card-title"><a class="dropdown-trigger white-text" href="#" data-target="card1dropdown" id="card1title">Verse <i class="material-icons">arrow_drop_down</i></a></span>
+                                <div class="input-field">
+                                    <textarea placeholder="Write your lyrics here..." class="materialize-textarea" id="card1textarea"></textarea>
+                                </div>
+                            </div>
+                            <div class="card-action">
+                                <a href="#" onclick="deleteLyricElement('card1');">Delete</a>
+                                <a href="#" onclick="copyLyricElement('card1title', 'card1textarea');">Copy</a>
+                            </div>
+                            <ul id="card1dropdown" class="dropdown-content indigo darken-2">
+                                <li><a href="#" onclick="changeCardTitle('card1title', 'Intro')" class="white-text">Intro</a></li>
+                                <li><a href="#" onclick="changeCardTitle('card1title', 'Verse')" class="white-text">Verse</a></li>
+                                <li><a href="#" onclick="changeCardTitle('card1title', 'Chorus')" class="white-text">Chorus</a></li>
+                                <li><a href="#" onclick="changeCardTitle('card1title', 'Bridge')" class="white-text">Bridge</a></li>
+                                <li><a href="#" onclick="changeCardTitle('card1title', 'Hook')" class="white-text">Hook</a></li>
+                                <li><a href="#" onclick="changeCardTitle('card1title', 'Intro')" class="white-text">Outro</a></li>
+                            </ul>
+                        </div>
+                        <div id="freeformEditor" class="card indigo darken-3" style="display: none;">
+                            <div class="card-content white-text">
+                                <span class="card-title">Freeform Editor</span>
+                                <div class="input-field">
+                                    <textarea placeholder="Write your lyrics here..." class="materialize-textarea" id="freeformTextarea"></textarea>
+                                </div>
+                            </div>
+                            <div class="card-action">
+                                <a href="#" onclick="copyText('freeformTextarea');">Copy Text</a>
+                            </div>
+                        </div>
+                        <p class="center" id="addNewDropdownTriggerParent">
+                            <a class="dropdown-trigger btn-floating btn-large waves-effect waves-light blue tooltipped no-autoinit" data-position="bottom" data-tooltip="Add new..." data-target="addNewDropdown" id="addNewDropdownTrigger"><i class="material-icons large">add</i></a>
+                            <a class="btn-floating btn-large waves-effect waves-light indigo lighten-1 tooltipped modal-trigger" href="#freeformModal" data-position="bottom" data-tooltip="Switch to Freeform..." id="switchToFreeformTrigger"><i class="material-icons large">repeat</i></a>
+                        </p>
+                        <ul id="addNewDropdown" class="dropdown-content indigo darken-2">
+                            <li><a href="#" onclick="addLyricElement('Verse');" class="white-text">Add new Verse...</a></li>
+                            <li><a href="#" onclick="addLyricElement('Chorus');" class="white-text">Add new Chorus...</a></li>
+                            <li><a href="#" onclick="addLyricElement('Bridge');" class="white-text">Add new Bridge...</a></li>
+                            <li><a href="#" onclick="addLyricElement('Hook');" class="white-text">Add new Hook...</a></li>
+                            <li class="divider" tab-index="-1"></li>
+                            <li><a href="#" onclick="addInstrumentalElement();" class="white-text">Add new Instrumental section...</a></li>
+                            <li class="divider" tab-index="-1"></li>
+                            <li><a href="#" onclick="pasteLyricElement();" class="white-text">Paste lyric element...</a></li>
+                        </ul>
+                        <div id="freeformModal" class="modal">
+                            <div class="modal-content black-text">
+                                <h4>Switch to Freeform?</h4>
+                                <p>After switching to Freeform, you won't be able to switch back. You also won't be able to export your lyrics, you'll only be able to copy/paste them as plaintext. You'll still get access to rhyming, however. Are you <i>sure</i> you want to switch to Freeform?</p>
+                            </div>
+                            <div class="modal-footer">
+                                <a href="#" class="modal-close waves-effect waves-red btn-flat">Take me back!</a>
+                                <a href="#" class="modal-close waves-effect waves-purple btn-flat" onclick="switchToFreeform();">Switch to Freeform!</a>
+                            </div>
+                        </div>
+                        <div id="rhymingModal" class="modal modal-fixed-footer">
+                            <div class="modal-content black-text" id="rhymingModalContent">
+                                <h4 class="center">Hysteria Rhyming Dictionary</h4>
+                                <p class="center">Powered by <a href="https://www.rhymezone.com/" target="_blank">RhymeZone</a>!</p>
+                                <br/>
+                                <div class="input-field">
+                                    <i class="material-icons prefix">search</i>
+                                    <input type="text" id="rhymeSearch"/>
+                                    <label for="rhymeSearch">Search for word...</label>
+                                    <div id="rhymingResultsRows">
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer grey lighten-5">
+                                <a href="#" class="modal-close waves-effect btn-flat">Close</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </body>
+    <script src="../js/editor.js"></script>
+</html>
